@@ -1,4 +1,6 @@
+import mathFun
 #starting the file
 
-def helloWorld(a, b)
-    print(a_b)
+
+
+mathFun.helloWorld(5,2)

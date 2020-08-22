@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>Form!</title>
+    {{ nav.my_navbar.render()}}
+</head>
+<body>
+    <h1>
+        Our form will be here!
+    </h1>
+    <form method='POST' action="{{url_for('form')}}">
+        {{ form.csrf_token}}
+        {{ form.breweryName.label}}
+        <p></p>
+        {{ form.breweryName}}
+        <p></p>
+        {{form.beerName.label}}
+        <p></p>
+        {{ form.beerName}}
+        <p></p>
+        {{form.abv.label}}
+        <p></p>
+        {{ form.abv}}
+        <p></p>
+        {{form.kegLine.label}}
+        <p></p>
+        {{ form.kegLine}}
+        <p></p>
+        {{form.kegSize.label}}
+        <p></p>
+        {{ form.kegSize}}
+        <p></p>
+        {{form.password.label}}
+        <p></p>
+        {{ form.password}}
+        <p></p>
+
+        <input type="submit" value="submit">
+
+
+
+        <ul>
+
+        {% for error in form.breweryName.errors %}
+            <p>Brewery Name errors</p>
+            <li style="color:red;">{{ error }}</li>
+        {% endfor %}
+
+        {% for error in form.beerName.errors %}
+        <p>Beer Name errors</p>
+        <li style="color:red;">{{ error }}</li>
+         {% endfor %}
+
+
+        {% for error in form.abv.errors %}
+            <p>abv errors</p>
+            <li style="color:red;">{{ error }}</li>
+        {% endfor %}
+
+        {% for error in form.kegLine.errors %}
+        <p>Keg Line errors</p>
+        <li style="color:red;">{{ error }}</li>
+         {% endfor %}
+
+         {% for error in form.kegSize.errors %}
+         <p>Keg Size errors</p>
+         <li style="color:red;">{{ error }}</li>
+          {% endfor %}
+
+          {% for error in form.password.errors %}
+          <p>PIN errors</p>
+          <li style="color:red;">{{ error }}</li>
+      {% endfor %}
+        </ul>
+
+    </form>
+</body>
+</html>

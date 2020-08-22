@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>this is the dashboard</title>
+    {{ nav.my_navbar.render()}}
+</head>
+<body>
+    This is the dashboard
+    <p></p>
+    <form method='POST' action="{{url_for('dashboard')}}">
+
+    {{form.startDate.label}}
+    <p></p>
+    {{ form.startDate}}
+    <p></p>
+    {{form.endDate.label}}
+    <p></p>
+    {{ form.endDate}}
+    <p></p>
+    <input type="submit" value="submit">
+    
+    </form>
+    <p>
+      
+        <ul>
+
+        {% for beer in output %}
+            <p>Brewery Names</p>
+            <li style="color:red;">{{ beer.beerName, beer.breweryName, beer.purchaseDate }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+</body>
+</html>

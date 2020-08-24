@@ -14,6 +14,7 @@ app.config['SECRET_KEY'] = 'Thisisasecret!'
 nav = Nav(app)
 
 import dbFunctions
+import flowmeter
 nav.register_element('my_navbar', Navbar(
     'thenav',
      View('Home Page','home'),
@@ -23,6 +24,7 @@ nav.register_element('my_navbar', Navbar(
      Separator()   
      ))
 
+#test git update
 class LoginForm(FlaskForm):
     username = DateField('username', validators=[InputRequired('a user name is required'), Length(min=5, max=10, message="too long or too short")])
     password = DateField('password', validators=[InputRequired()])
@@ -39,6 +41,9 @@ class BeerInput(FlaskForm):
     kegLine = IntegerField('Keg Line', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=2, message="enter either 1 or 2")])
     kegSize = DecimalField('Keg Size', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=100, message="must be number value between 1 and 100")])
     password = PasswordField('password', validators=[InputRequired(),AnyOf('0000', message='pin doesnt match')])
+
+class HomeForm(FlaskForm):
+    kegLine = IntegerField('Keg Line', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=2, message="enter either 1 or 2")])
 
 @app.route('/addBeer', methods=['GET', 'POST'])
 def form():
@@ -79,11 +84,22 @@ def dashboard():
 
     return render_template('dashboard.html', form=form, output=output)
 
-@app.route('/login')
+@app.route('/login', methods=['GET','POST'])
 def login():
     return render_template('login.html')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    form = HomeForm()
+    output = 'some rando text'
+    beerName1 = 'test beer 1'
+    beerName2 = 'test beer 2'
+    amountLeft1= 5
+    amountLeft2 = 4
+        
+    if request.method == 'POST':
+        flowmeter.pourEvent(int(form.kegLine.data))
+        print('called flowmeter already')
+        render_template('login.html')
+    return render_template('home.html', form=form, beerName1=beerName1,beerName2=beerName2, amountLeft1=amountLeft1, amountLeft2=amountLeft2)
 

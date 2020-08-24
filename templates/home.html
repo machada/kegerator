@@ -8,5 +8,34 @@
 <body>
     {{ nav.my_navbar.render()}}
     this is our home
+    <p></p>
+    <form method='POST' action="{{url_for('home')}}">
+
+ 
+    <p></p>
+    {{form.kegLine.label}}
+    <p></p>
+    {{ form.kegLine}}
+    <p></p>
+    <input type="submit" value="submit">
+    
+    </form>
+    <h1>
+        On Tap 1
+        <p>
+            {{beerName1}}
+            {{amountLeft1}}
+           
+        </p>
+    </h1>
+    <h1>
+        On Tap 2
+        <p>
+            {{beerName2}}
+            {{amountLeft2}}
+           
+        </p>
+    </h1>
+    <p>
 </body>
 </html>

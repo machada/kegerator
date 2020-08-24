@@ -75,3 +75,8 @@ def purchaseReport(startDate, endDate):
         print(r.beerName)
     
     return reportOutput
+
+def getActiveBeer(kegLine):
+    activeBeer = db.session.query(BeerList).filter(BeerList.status == 'active', BeerList.kegLine == kegLine)
+    print('active beer id is ',activeBeer[0].id, ' beer name ',activeBeer[0].beerName, ' amount left ', activeBeer[0].currentVolume)
+    return activeBeer[0].id

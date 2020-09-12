@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+{% extends 'base.html' %}
+{% block content %}
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styling.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>this is the dashboard</title>
-    {{ nav.my_navbar.render()}}
+    
 </head>
 <body>
-    This is the dashboard
+    
     <p></p>
-    <form method='POST' action="{{url_for('dashboard')}}">
+    <form method='POST' action="{{url_for('dashboard')}}" class="grid-container">
 
     {{form.startDate.label}}
     <p></p>
@@ -23,14 +26,34 @@
     
     </form>
     <p>
-      
+      <!--
         <ul>
-
         {% for beer in output %}
             <p>Brewery Names</p>
             <li style="color:red;">{{ beer.beerName, beer.breweryName, beer.purchaseDate , beer.currentVolume}}</li>
         {% endfor %}
         </ul>
+    -->
+
     </p>
+    <table class="data-table">
+        <tr>
+            <th>Beer Name</th>
+            <th>Brewery Name</th>
+            <th>Purchase Date</th>
+            <th>Current Volume</th>
+        </tr>
+
+        {% for beer in output %}
+            <tr>
+                <td> {{beer.beerName}} </td>
+                <td> {{beer.breweryName}} </td>
+                <td> {{beer.purchaseDate}} </td>
+                <td> {{beer.currentVolume}} </td>
+            </tr>
+            
+        {%endfor%}
+    </table>
 </body>
+{%endblock%}
 </html>

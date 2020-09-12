@@ -1,12 +1,15 @@
 <html>
+{% extends 'base.html' %}
+{% block content %}
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styling.css') }}">
     <title>Form!</title>
-    {{ nav.my_navbar.render()}}
+   
 </head>
 <body>
-    <h1>
-        Our form will be here!
-    </h1>
+
+    <div class="grid-container">
+    <h1 class="add-beer-form">
     <form method='POST' action="{{url_for('form')}}">
         {{ form.csrf_token}}
         {{ form.breweryName.label}}
@@ -34,7 +37,7 @@
         {{ form.password}}
         <p></p>
 
-        <input type="submit" value="submit">
+        <input type="submit" value="submit" class="btn1">
 
 
 
@@ -73,5 +76,8 @@
         </ul>
 
     </form>
+</h1>
+</div>
 </body>
+{%endblock%}
 </html>

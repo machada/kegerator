@@ -26,6 +26,13 @@ class BeerTransactions(db.Model):
     decrementVolume = db.Column(db.Float, unique=False, nullable = False)
     transDate = db.Column(db.DateTime, default=datetime.utcnow, unique=False, nullable = False)
     beer_list_id = db.Column(db.Integer, db.ForeignKey('beer_list.id'))
+
+class TempReadings(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    sensorNum = db.Column(db.Integer, unique=False, nullable = False)
+    tempReading = db.Column(db.Float, unique=False, nullable = False)
+    timeStamp = db.Column(db.DateTime, default=datetime.utcnow, unique=False, nullable = False)
+
     
 def addBeer(beerName, purchaseDate, abv, kegLine, initialVolume, currentVolume, status, kickDate, breweryName):
     newBeer = BeerList(beerName=beerName, purchaseDate=purchaseDate, abv=abv, kegLine=kegLine, initialVolume=initialVolume, currentVolume=currentVolume, status=status, kickDate=kickDate, breweryName=breweryName)
@@ -79,4 +86,13 @@ def purchaseReport(startDate, endDate):
 def getActiveBeer(kegLine):
     activeBeer = db.session.query(BeerList).filter(BeerList.status == 'active', BeerList.kegLine == kegLine)
     print('active beer id is ',activeBeer[0].id, ' beer name ',activeBeer[0].beerName, ' amount left ', activeBeer[0].currentVolume)
-    return activeBeer[0].id
+    return activeBeer[0]
+
+
+def addTemp(sensorNum, tempReading):
+    newReading = TempReadings(sensorNum=sensorNum, tempReading=tempReading )
+    db.session.add(newReading)
+    db.session.commit()
+    print(newReading)
+    #set previous beer occupying keg line to kicked status
+    

@@ -1,13 +1,16 @@
+
+
 <!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styling.css') }}">
     <title>Document</title>
 </head>
 <body>
-    {{ nav.my_navbar.render()}}
-    this is our home
+
+</div>
     <p></p>
     <form method='POST' action="{{url_for('home')}}">
 
@@ -17,25 +20,52 @@
     <p></p>
     {{ form.kegLine}}
     <p></p>
-    <input type="submit" value="submit">
+    <input type="submit" value="submit" class="btn1">
     
     </form>
-    <h1>
-        On Tap 1
+    <div class="grid-container">
+
+    <h1 class="grid-item item-1">
+        Tap 1
         <p>
             {{beerName1}}
+            <p>
             {{amountLeft1}}
-           
+            </p>
         </p>
     </h1>
-    <h1>
-        On Tap 2
+
+    <h1 class="grid-item item-2">
+        Tap 2
         <p>
             {{beerName2}}
+            <p>
             {{amountLeft2}}
+            </p>
            
         </p>
     </h1>
-    <p>
+    
+    
+
+   
+       <h1 class="grid-item item-3">
+        <canvas id="myChart1"></canvas>
+        </h1>
+    
+
+        <h1 class="grid-item item-4">
+         <canvas id="myChart2"></canvas>
+         </h1>
+
+         <h1 class="grid-item item-5">
+            <canvas id="myChart3"></canvas>
+        </h1>   
+
+
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='charting.js') }}"></script>
+
 </body>
+{% endblock %}
 </html>

@@ -1,0 +1,44 @@
+.grid-container {
+    
+    /*border: 2px solid rgb(92, 91, 91);*/
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    /*grid-template-rows:  ;*/
+    
+}
+
+.grid-item{
+    border: 2px solid rgb(25, 26, 25);
+    padding: 10px;
+}
+
+.btn1{
+    background-color: #e7e7e7; color: black;/* Gray */
+    /*e7e7e7  */
+}
+
+html {
+    padding: 5px;
+    margin: 50px;
+}
+form {
+    border-block-color: black;
+}
+.add-beer-form{
+    margin: 50px;
+}
+.data-table{
+    text-align: left;
+    width: 80%;
+    border: 1px solid black;
+    padding: 5px;
+
+}
+
+.grid-item{
+    font-size: 3rem;
+    font-weight: 650;
+    line-height: 1;
+    color: #212529;
+    text-align: center;
+}

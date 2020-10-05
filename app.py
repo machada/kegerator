@@ -8,6 +8,7 @@ from flask_nav import Nav
 from flask_nav.elements import Navbar, Subgroup, View, Link, Text, Separator
 from wtforms.fields.html5 import DateField
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Phoenix1@localhost/kegerator'
 app.config['SECRET_KEY'] = 'Thisisasecret!'
@@ -15,6 +16,11 @@ nav = Nav(app)
 
 import dbFunctions
 import flowmeter
+import tempsensors
+import initiateSensors
+
+#initiateSensors.startNow()
+
 nav.register_element('my_navbar', Navbar(
     'thenav',
      View('Home Page','home'),
@@ -106,9 +112,37 @@ def test():
     beer2Dict["amountConsumed"] = (beer2.initialVolume - beer2.currentVolume) * 8
     beer2Dict["kegLine"] = beer2.kegLine
 
+    #getTempData takes sensor # and # of records desired, returns dict with that info
+    temp1 = dbFunctions.getTempData(1,5)
+    temp2 = dbFunctions.getTempData(2,5)
+    temp3 = dbFunctions.getTempData(3,5)
+
+    print('app.py times are ',temp3["timeStamp"])
+
+    temp1Dict = {}
+    temp1Dict["sensorName"] = "sensor 1"
+    temp1Dict["tempReadings"] = temp1['tempL']
+    temp1Dict["rhReadings"] = temp1['rhL']
+    temp1Dict["dateSeries"] = temp1['timeStamp']
+
+    temp2Dict = {}
+    temp2Dict["sensorName"] = "sensor 2"
+    temp2Dict["tempReadings"] = temp2['tempL']
+    temp2Dict["rhReadings"] = temp2['rhL']
+
+    temp3Dict = {}
+    temp3Dict["sensorName"] = "sensor 3"
+    temp3Dict["tempReadings"] = temp3['tempL']
+    temp3Dict["rhReadings"] = temp3['rhL']
+    temp3Dict["dateSeries"] = temp3['timeStamp']
+
+
     beerDictionary = {
         "beer1": beer1Dict,
-        "beer2": beer2Dict
+        "beer2": beer2Dict,
+        "tempSeries1": temp1Dict,
+        "tempSeries2": temp2Dict,
+        "tempSeries3": temp3Dict
     }
 
     if request.method == 'GET':
@@ -127,21 +161,12 @@ def home():
 
     if request.method == 'POST':
         #flowmeter.pourEvent(int(form.kegLine.data))
+        #tempsensors.startSensor(4,1)
+        #tempsensors.startSensor(18,3)
+        initiateSensors.startNow()
         dbFunctions.addTransaction( dbFunctions.getActiveBeer(form.kegLine.data).id, .5)
      
-        def buildDB():
-            iterations = 15
-            increment = 4
-            startingValue = 1
-            currentValue = 1
 
-            while (currentValue < iterations):
-                startingValue = startingValue + increment
-                currentValue = currentValue + 1
-                dbFunctions.addTemp(3, startingValue)
-                print(startingValue)
-
-        buildDB()
 
             #dbFunctions.addTemp(1, 40)
         print('called flowmeter already')

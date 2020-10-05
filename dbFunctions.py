@@ -31,6 +31,7 @@ class TempReadings(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     sensorNum = db.Column(db.Integer, unique=False, nullable = False)
     tempReading = db.Column(db.Float, unique=False, nullable = False)
+    rhReading = db.Column(db.Float, unique=False, nullable = False)
     timeStamp = db.Column(db.DateTime, default=datetime.utcnow, unique=False, nullable = False)
 
     
@@ -54,7 +55,7 @@ def addTransaction(beer_list_id, decrementVolume):
     stmt.currentVolume = stmt.currentVolume - decrementVolume
     db.session.commit()
 
-    print(resulting[0].beerName, resulting[0].currentVolume)
+    #print(resulting[0].beerName, resulting[0].currentVolume)
 
 def terminateBeer(kegLine):
     results = db.session.query(BeerList).filter(BeerList.kegLine==kegLine, BeerList.status=='active')
@@ -62,7 +63,7 @@ def terminateBeer(kegLine):
     for r in results:
         max = 1
         test = r.id
-        print('active beers on line are ', r.beerName)
+        #print('active beers on line are ', r.beerName)
 
         if test > max:
             max = test
@@ -78,21 +79,62 @@ def terminateBeer(kegLine):
 def purchaseReport(startDate, endDate):
     reportOutput = db.session.query(BeerList).filter(BeerList.purchaseDate > startDate, BeerList.purchaseDate < endDate)
     
-    for r in reportOutput:
-        print(r.beerName)
+    #for r in reportOutput:
+    #    print(r.beerName)
     
     return reportOutput
 
 def getActiveBeer(kegLine):
     activeBeer = db.session.query(BeerList).filter(BeerList.status == 'active', BeerList.kegLine == kegLine)
-    print('active beer id is ',activeBeer[0].id, ' beer name ',activeBeer[0].beerName, ' amount left ', activeBeer[0].currentVolume)
+    #print('active beer id is ',activeBeer[0].id, ' beer name ',activeBeer[0].beerName, ' amount left ', activeBeer[0].currentVolume)
     return activeBeer[0]
 
 
-def addTemp(sensorNum, tempReading):
-    newReading = TempReadings(sensorNum=sensorNum, tempReading=tempReading )
+def addTemp(sensorNum, tempReading, rhReading, timeStamp):
+    newReading = TempReadings(sensorNum=sensorNum, tempReading=tempReading, rhReading=rhReading, timeStamp=timeStamp )
     db.session.add(newReading)
     db.session.commit()
     print(newReading)
-    #set previous beer occupying keg line to kicked status
     
+def getTempData(sensorNum, qtyReadings):
+    lastRecord = db.session.query(TempReadings).order_by(TempReadings.id.desc()).first()
+    lastID = lastRecord.id
+    startID = lastID - (qtyReadings*3)
+    tempSet = db.session.query(TempReadings).filter(TempReadings.id > startID).filter(TempReadings.sensorNum == sensorNum).order_by(TempReadings.id.asc()).limit(qtyReadings*3)
+    #print("length is ",tempSet.count())
+    #print("start id is ",startID, " last id is ",lastID)
+    #for r in tempSet:
+        #print('id is ',r.timeStamp, 'id is ',r.id, ' sensor num is ',r.sensorNum,' temp rd ',r.tempReading)
+        #print('hello')
+
+
+    output = createTempDict(tempSet,sensorNum)
+    #print("the first temp in dict is ",output['tempL'][0])
+    #print("the complete list is ",output['tempL'])
+
+    return output
+
+def createTempDict(queryData, sensorNum):
+    #tempDict = {}
+    #tempDict["rhReadings"] = [50,55,45,60,65]
+    
+    tempList = []
+    rhList = []
+    timeStamp = []
+    
+
+    for r in queryData:
+        tempList+= [r.tempReading]
+        rhList+= [r.rhReading]
+        timeStamp+=[r.timeStamp]
+
+    #print('print tempList ',tempList, rhList, timeStamp)
+    outputDict = {}
+    outputDict["sensorNum"] = sensorNum
+    outputDict["tempL"] = tempList
+    outputDict["rhL"] = rhList
+    outputDict["timeStamp"] = timeStamp
+    #print('outputdict is ',outputDict["timeStamp"])
+    return outputDict
+    
+

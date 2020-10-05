@@ -1,17 +1,23 @@
 
+//Al's windows machine ip
 url = 'http://10.0.0.52/getChartData';
+
+//Al's rasp pi ip
+url = 'http://10.0.0.150:1050/getChartData';
+
 getData(url);
 
-console.log("in charting");
+
 
 function getData(url){
+    
     fetch(url)
         .then(res => res.json())
         .then(json => {
             
             renderChart(json.beer1.currentVolume, json.beer1.amountConsumed, "1", "bar")
             renderChart(json.beer2.currentVolume, json.beer2.amountConsumed, "2", "bar")
-            renderLineChart(json.beer2.currentVolume, json.beer2.amountConsumed, "3", "bar")
+            renderLineChart(json.tempSeries1.tempReadings,json.tempSeries2.tempReadings,json.tempSeries3.tempReadings, json.tempSeries1.dateSeries, "3", "line")
             //renderLineChart()
         }
         )
@@ -56,31 +62,31 @@ let kegRemaining = new Chart(myChart, {
 })
 }
 
-function renderLineChart(amountLeft, consumed, chartNumber, chartType){
+function renderLineChart(sensor1Temps,sensor2Temps,sensor3Temps, dateSeries, chartNumber, chartType){
     let currentChart = 'myChart' + chartNumber
     let myChart = document.getElementById(currentChart).getContext('2d');
-    
+    alert('renderingline chart');
     console.log('rendering chart');
     let kegRemaining = new Chart(myChart, {
         type:"line", //bar, horizontalBar, pie, Line, doughnut, radar, polarArea
         data:{
-            labels:[0, 10, 20 ,30, 40, 50, 60],
+            labels:dateSeries,
             datasets:[
                 {
                 label:'Sensor 1',
-                data: [10,15,10,20,5,6,25],
+                data: sensor1Temps,
                 backgroundColor: '#D6E9C6', // green
                
             },
             {
             label: 'Sensor 2',
-            data: [20,25,20,30,25,6,25],
+            data: sensor2Temps,
             backgroundColor: '#EBCCD1', // red
             
             },
             {
                 label: 'Sensor 3',
-                data: [20,25,20,30,25,6,25],
+                data: sensor3Temps,
                 backgroundColor: '#EBCCD1', // red
                 
                 }
@@ -95,8 +101,8 @@ function renderLineChart(amountLeft, consumed, chartNumber, chartType){
               
             },
             scales: {
-                xAxes: [{ stacked: true}],
-                yAxes: [{ stacked: true}]
+                xAxes: [{ stacked: false}],
+                yAxes: [{ stacked: false}]
             },
            
         }

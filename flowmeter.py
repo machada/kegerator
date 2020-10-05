@@ -1,38 +1,33 @@
-#import RPi.GPIO as GPIO
-import time
-import dbFunctions
-from datetime import datetime
+def pourEvent(pinNumber, kegLine):
+    import RPi.GPIO as GPIO
+    import time
+    import dbFunctions
+    from datetime import datetime
+    print("hello*********************************************************")
 
-
-
-
-def pourEvent(kegLine):
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
 
-    GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(pinNumber, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     try:
         pourAmount = 0
         count = 0
+        count2 = 0
         while True:
-            count= count + 1
-            if GPIO.input(18)==0:
-                #each time the flowmeter rotates is equivalent to 2.25 ml, converted to gal we get .0005943871
-                #print('open')
-                print('low voltage and count is ', count)
-                if count > 50000:
-                    break
-            
+            count = count + 1
+            if GPIO.input(pinNumber) ==0:
+                count2 += 1
             else:
                 #print("closed")
                 pourAmount = pourAmount + .0005943871
-                print('high voltage and count is reset', pourAmount)
-                count = 0
-        
+            if count > 10000:
+                break
     finally:
+        print("pour amount on kegline ",kegLine, " is ", pourAmount, "***********************************************************************")
         GPIO.cleanup()
-    print('total poured is ', pourAmount)
-    beerID = dbFunctions.getActiveBeer(kegLine)
-    dbFunctions.addTransaction(beerID, pourAmount)
 
+    beerID = dbFunctions.getActiveBeer(kegLine)
+
+    if pourAmount > 0:
+        dbFunctions.addTransaction(beerID, pourAmount)

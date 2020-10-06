@@ -25,7 +25,7 @@ nav.register_element('my_navbar', Navbar(
     'thenav',
      View('Home Page','home'),
      View('Dashboard', 'dashboard'),
-     View('Login', 'login'),
+     View('Start Sensors', 'startSensors'),
      View('Add New Beer', 'form')
 ))
 
@@ -46,6 +46,9 @@ class BeerInput(FlaskForm):
     kegLine = IntegerField('Keg Line', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=2, message="enter either 1 or 2")])
     kegSize = DecimalField('Keg Size', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=100, message="must be number value between 1 and 100")])
     password = PasswordField('Password', validators=[InputRequired(),AnyOf('0000', message='pin doesnt match')])
+
+class frm_startSensors(FlaskForm):
+      password = PasswordField('Password', validators=[InputRequired(),AnyOf('0000', message='pin doesnt match')])
 
 class HomeForm(FlaskForm):
     kegLine = IntegerField('Enter the Keg Line to Decrement', validators=[InputRequired('a user name is required'), NumberRange(min=1, max=2, message="enter either 1 or 2")])
@@ -91,9 +94,26 @@ def dashboard():
 
     return render_template('dashboard.html', form=form, output=output)
 
-@app.route('/login', methods=['GET','POST'])
-def login():
-    return render_template('login.html')
+@app.route('/startSensors', methods=['GET','POST'])
+def startSensors():
+    form = frm_startSensors()
+    message=""
+    if request.method == 'POST':
+        if request.form["submit_button"] == "Start Sensors":
+            message = "Started sensors..."
+            dbFunctions.newSensorStatus("run")
+            initiateSensors.startNow()
+            
+        elif request.form["submit_button"] == "Check Status":
+            lastReading = dbFunctions.getLastTemp()
+            lastStatus = dbFunctions.getLastSensorStatus()
+            message = "The status is "+ lastStatus +".  The last reading was at " + str(lastReading)
+
+        else:
+            message = "Stopped the sensors..."
+            dbFunctions.newSensorStatus("stopped")
+
+    return render_template('startSensors.html',form=form, message=message)
 
 @app.route('/getChartData', methods=['GET','POST'])
 def test():

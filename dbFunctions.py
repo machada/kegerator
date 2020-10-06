@@ -34,6 +34,11 @@ class TempReadings(db.Model):
     rhReading = db.Column(db.Float, unique=False, nullable = False)
     timeStamp = db.Column(db.DateTime, default=datetime.utcnow, unique=False, nullable = False)
 
+class SensorStatus(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    currentStatus = db.Column(db.String(10), unique=False, nullable = False)
+    timeStamp = db.Column(db.DateTime, default=datetime.utcnow, unique=False, nullable = False)
+
     
 def addBeer(beerName, purchaseDate, abv, kegLine, initialVolume, currentVolume, status, kickDate, breweryName):
     newBeer = BeerList(beerName=beerName, purchaseDate=purchaseDate, abv=abv, kegLine=kegLine, initialVolume=initialVolume, currentVolume=currentVolume, status=status, kickDate=kickDate, breweryName=breweryName)
@@ -137,4 +142,18 @@ def createTempDict(queryData, sensorNum):
     #print('outputdict is ',outputDict["timeStamp"])
     return outputDict
     
+def getLastTemp():
+    lastRecord = db.session.query(TempReadings).order_by(TempReadings.id.desc()).first()
+    lastDateTime = lastRecord.timeStamp
+    return lastDateTime
 
+def newSensorStatus(status):
+    newStatus = SensorStatus(currentStatus= status)
+    db.session.add(newStatus)
+    db.session.commit()
+    print(newStatus)
+
+def getLastSensorStatus():
+    lastRecord = db.session.query(SensorStatus).order_by(SensorStatus.id.desc()).first()
+    lastStatus = lastRecord.currentStatus
+    return lastStatus

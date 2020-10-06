@@ -9,9 +9,10 @@ import dbFunctions
 
 def startSensor(pinNumber,interval,sensorNum, sampleTotal):
     mins = 0
-    maxMinutes = 600
+    maxMinutes = 1000
+    runStatus = "run"
 
-    while mins < maxMinutes:
+    while mins < maxMinutes and runStatus == "run":
     
         DHT_SENSOR = Adafruit_DHT.DHT11
         DHT_PIN = pinNumber
@@ -24,23 +25,25 @@ def startSensor(pinNumber,interval,sensorNum, sampleTotal):
         sumRH=0
         avgTemp = 0
         avgRH = 0
-        
+
+
+
         while count < sampleTotal:
             humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
             count+=1
-            print('inside while loop and count is ',count,' temp is ',temperature)
+            print('inside while loop and count is ',count,' temp is ',temperature), 'sensor num is ',sensorNum
             if humidity is not None and temperature is not None:
                 temperature = (temperature * 9/5)+32
                 sumTemp = sumTemp + temperature
                 sumRH = sumRH + humidity
                 qtyReadings+=1
-                print("sensor number ",pinNumber, ' count is ',count)
+                #print("sensor number ",pinNumber, ' count is ',count)
                 #print("Temp={0:0.1f}C Humidity={1:0.1f}% ".format(temperature, humidity))
             else:
                 counter = 0
                 #print("sensor failure. Check wiring. sensor num ",pinNumber);
             time.sleep(interval)
-            print('interval is ', interval)
+            #print('interval is ', interval)
 
         if qtyReadings > 0:
             avgTemp = round((sumTemp/qtyReadings),1)
@@ -49,8 +52,10 @@ def startSensor(pinNumber,interval,sensorNum, sampleTotal):
             dbFunctions.addTemp(sensorNum, avgTemp, avgRH, logTime)
             print('writing to db')
             print('logging values ', sensorNum, ' avg temp ', avgTemp, ' avgRH ',avgRH, ' log time ',logTime)
+            runStatus = dbFunctions.getLastSensorStatus()
+            print("last sensor status was ",runStatus)       
+        
         mins = mins + 1
- 
 
     #while minCount < mins:
         #sampling(pinNumber,interval, sensorNum)

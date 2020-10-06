@@ -65,7 +65,6 @@ let kegRemaining = new Chart(myChart, {
 function renderLineChart(sensor1Temps,sensor2Temps,sensor3Temps, dateSeries, chartNumber, chartType){
     let currentChart = 'myChart' + chartNumber
     let myChart = document.getElementById(currentChart).getContext('2d');
-    alert('renderingline chart');
     console.log('rendering chart');
     let kegRemaining = new Chart(myChart, {
         type:"line", //bar, horizontalBar, pie, Line, doughnut, radar, polarArea
@@ -75,19 +74,19 @@ function renderLineChart(sensor1Temps,sensor2Temps,sensor3Temps, dateSeries, cha
                 {
                 label:'Sensor 1',
                 data: sensor1Temps,
-                backgroundColor: '#D6E9C6', // green
+                backgroundColor: '#B42033', // red
                
             },
             {
             label: 'Sensor 2',
             data: sensor2Temps,
-            backgroundColor: '#EBCCD1', // red
+            backgroundColor: '#FEFEFE', // White
             
             },
             {
                 label: 'Sensor 3',
                 data: sensor3Temps,
-                backgroundColor: '#EBCCD1', // red
+                backgroundColor: '#3C3B6E', // blue
                 
                 }
 

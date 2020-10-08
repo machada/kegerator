@@ -27,6 +27,8 @@ function renderChart(amountLeft, consumed, chartNumber, chartType){
 let currentChart = 'myChart' + chartNumber
 let myChart = document.getElementById(currentChart).getContext('2d');
 
+
+
 console.log('rendering chart');
 let kegRemaining = new Chart(myChart, {
     type:"bar", //bar, horizontalBar, pie, Line, doughnut, radar, polarArea
@@ -36,13 +38,14 @@ let kegRemaining = new Chart(myChart, {
             {
             label:'Pints Remaining',
             data: [amountLeft],
-            backgroundColor: '#D6E9C6', // green
+            backgroundColor: 'rgba(60,59,110,1)',// blue
+            size: '50',
            
         },
         {
         label: 'Pints Consumed',
         data: [consumed],
-        backgroundColor: '#EBCCD1', // red
+        backgroundColor: 'rgba(178,34,52)', // red
         
         }
         ]
@@ -54,8 +57,15 @@ let kegRemaining = new Chart(myChart, {
           
         },
         scales: {
-            xAxes: [{ stacked: true}],
-            yAxes: [{ stacked: true}]
+            xAxes: [{ stacked: true,
+                ticks:{
+                    fontSize:30
+                }}],
+            yAxes: [{ stacked: true,
+                ticks:{
+                    fontSize:20
+                }
+            }]
         },
        
     }
@@ -65,28 +75,38 @@ let kegRemaining = new Chart(myChart, {
 function renderLineChart(sensor1Temps,sensor2Temps,sensor3Temps, dateSeries, chartNumber, chartType){
     let currentChart = 'myChart' + chartNumber
     let myChart = document.getElementById(currentChart).getContext('2d');
-    console.log('rendering chart');
+    console.log('rendering chart1');
     let kegRemaining = new Chart(myChart, {
         type:"line", //bar, horizontalBar, pie, Line, doughnut, radar, polarArea
+        fillOpacity: .3,
         data:{
             labels:dateSeries,
             datasets:[
                 {
                 label:'Sensor 1',
                 data: sensor1Temps,
-                backgroundColor: '#B42033', // red
+                //backgroundColor: '#B42033', // red
+                fillOpacity: .1,
+                backgroundColor:'rgba(178,34,52,.3)',
+                borderColor:'#B42033',
+                borderWidth:'5',
+
+            
                
             },
             {
             label: 'Sensor 2',
             data: sensor2Temps,
-            backgroundColor: '#FEFEFE', // White
-            
+            backgroundColor: 'rgba(0,0,0,0)', // White
+            borderColor:'rgba(207,207,207)',//grey
+            borderWidth:'5',
             },
             {
                 label: 'Sensor 3',
                 data: sensor3Temps,
-                backgroundColor: '#3C3B6E', // blue
+                //backgroundColor: '#3C3B6E', // blue
+                borderColor:'rgba(60,59,110,.6)',
+                borderWidth:'5',
                 
                 }
 

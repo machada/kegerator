@@ -21,8 +21,8 @@ def add3Sensor():
     r=1
     x=1
     records = 5
-    temp = 60
-    rh = 55
+    temp = 40
+    rh = 53
     limit = 3
     timeStamp = datetime.datetime.now()
     timeStamp1 = timeFunctions.roundTime(timeStamp,datetime.timedelta(minutes=5))

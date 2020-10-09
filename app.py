@@ -18,6 +18,7 @@ import dbFunctions
 import flowmeter
 import tempsensors
 import initiateSensors
+import stripDate
 
 #initiateSensors.startNow()
 
@@ -137,13 +138,13 @@ def test():
     temp2 = dbFunctions.getTempData(2,5)
     temp3 = dbFunctions.getTempData(3,5)
 
-    print('app.py times are ',temp3["timeStamp"])
+    timeList = stripDate.strip(temp1)
 
     temp1Dict = {}
     temp1Dict["sensorName"] = "sensor 1"
     temp1Dict["tempReadings"] = temp1['tempL']
     temp1Dict["rhReadings"] = temp1['rhL']
-    temp1Dict["dateSeries"] = temp1['timeStamp']
+    temp1Dict["dateSeries"] = timeList
 
     temp2Dict = {}
     temp2Dict["sensorName"] = "sensor 2"
@@ -156,7 +157,6 @@ def test():
     temp3Dict["rhReadings"] = temp3['rhL']
     temp3Dict["dateSeries"] = temp3['timeStamp']
 
-
     beerDictionary = {
         "beer1": beer1Dict,
         "beer2": beer2Dict,
@@ -167,6 +167,7 @@ def test():
 
     if request.method == 'GET':
         payload =  json.dumps(beerDictionary)
+        print("procesesing get request")
     return (payload)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -180,15 +181,8 @@ def home():
     amountLeft2 = beer2.currentVolume
 
     if request.method == 'POST':
-        #flowmeter.pourEvent(int(form.kegLine.data))
-        #tempsensors.startSensor(4,1)
-        #tempsensors.startSensor(18,3)
-        initiateSensors.startNow()
         dbFunctions.addTransaction( dbFunctions.getActiveBeer(form.kegLine.data).id, .5)
-     
 
-
-            #dbFunctions.addTemp(1, 40)
         print('called flowmeter already')
         return redirect(url_for('home'))
     return render_template('home.html', form=form, beerName1=beerName1,beerName2=beerName2, amountLeft1=amountLeft1, amountLeft2=amountLeft2 )

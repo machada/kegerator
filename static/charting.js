@@ -1,9 +1,10 @@
 
 //Al's windows machine ip
-url = 'http://10.0.0.52/getChartData';
+url = 'http://10.0.0.52:1050/getChartData';
+
 
 //Al's rasp pi ip
-url = 'http://10.0.0.150:1050/getChartData';
+//url = 'http://10.0.0.150:1050/getChartData';
 
 getData(url);
 
@@ -11,13 +12,16 @@ getData(url);
 
 function getData(url){
     
+    
     fetch(url)
-        .then(res => res.json())
+        .then(res => res.json() )
         .then(json => {
-            
+            //alert("fetch");
             renderChart(json.beer1.currentVolume, json.beer1.amountConsumed, "1", "bar")
             renderChart(json.beer2.currentVolume, json.beer2.amountConsumed, "2", "bar")
             renderLineChart(json.tempSeries1.tempReadings,json.tempSeries2.tempReadings,json.tempSeries3.tempReadings, json.tempSeries1.dateSeries, "3", "line")
+            renderLineChart(json.tempSeries1.rhReadings,json.tempSeries2.rhReadings,json.tempSeries3.rhReadings, json.tempSeries1.dateSeries, "4", "line")
+
             //renderLineChart()
         }
         )
@@ -34,13 +38,15 @@ let kegRemaining = new Chart(myChart, {
     type:"bar", //bar, horizontalBar, pie, Line, doughnut, radar, polarArea
     data:{
         labels:['Keg Status'],
+            
+        
         datasets:[
             {
             label:'Pints Remaining',
             data: [amountLeft],
             backgroundColor: 'rgba(60,59,110,1)',// blue
-            size: '50',
-           
+            fontSize: '20'
+                       
         },
         {
         label: 'Pints Consumed',
@@ -53,6 +59,7 @@ let kegRemaining = new Chart(myChart, {
     options:{
         legend: {
             display: true,
+            fontSize: 60
         
           
         },
@@ -74,6 +81,7 @@ let kegRemaining = new Chart(myChart, {
 
 function renderLineChart(sensor1Temps,sensor2Temps,sensor3Temps, dateSeries, chartNumber, chartType){
     let currentChart = 'myChart' + chartNumber
+    
     let myChart = document.getElementById(currentChart).getContext('2d');
     console.log('rendering chart1');
     let kegRemaining = new Chart(myChart, {
